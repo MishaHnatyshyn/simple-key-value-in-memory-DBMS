@@ -3,4 +3,4 @@ project(course_work)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(course_work main.cpp main.cpp)
+add_executable(course_work main.cpp main.cpp Parser.cpp Parser.h)
