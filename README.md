@@ -143,7 +143,7 @@ Each text values should be written in quotes
     // example
     exampleTable.getOneRow({name: "Misha"})
     // or
-    exampleTable.getOneRow({name: "Misha, age: 18"})
+    exampleTable.getOneRow({name: "Misha, age: 18})
 ```
 
 ##### Get few rows by field value
@@ -157,7 +157,7 @@ Each text values should be written in quotes
     // example
     exampleTable.getRows({name: "Misha"})
     // or
-    exampleTable.getRows({name: "Misha, age: 18"})
+    exampleTable.getRows({name: "Misha, age: 18})
 ```
 
 ##### Change data for one row
@@ -171,7 +171,7 @@ Each text values should be written in quotes
     // or
     exampleTable.changeOneRowData({name: "Misha"}, {name: "Mike", age: 19});
     // or
-    exampleTable.changeOneRowData({name: "Misha", age: "18"}, {name: "Mike", age: 19});
+    exampleTable.changeOneRowData({name: "Misha", age: 18}, {name: "Mike", age: 19});
 ```
 
 ##### Change data for few rows
@@ -185,7 +185,7 @@ Each text values should be written in quotes
     // or
     exampleTable.changeData({name: "Misha"}, {name: "Mike", age: 19});
     // or
-    exampleTable.changeData({name: "Misha", age: "18"}, {name: "Mike", age: 19});
+    exampleTable.changeData({name: "Misha", age: 18}, {name: "Mike", age: 19});
 ```
 
 ##### Delete one row
@@ -196,7 +196,7 @@ Each text values should be written in quotes
     // example 
     exampleTable.deleteRow({name: "Misha"});
     // or
-    exampleTable.deleteRow({name: "Misha", age: "18"});
+    exampleTable.deleteRow({name: "Misha", age: 18});
 ```
 
 ##### Delete few rows
@@ -207,6 +207,6 @@ Each text values should be written in quotes
     // example 
     exampleTable.deleteRows({name: "Misha"});
     // or
-    exampleTable.deleteRows({name: "Misha", age: "18"});
+    exampleTable.deleteRows({name: "Misha", age: 18});
 ```
 
