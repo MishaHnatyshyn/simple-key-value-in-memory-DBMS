@@ -34,7 +34,7 @@ When you are looking for some specific row always try to specify looking data as
 ```
 **Note:** Every inserted data should be the same type as it mentioned while creating otherwise it will cause an error
 ```
-    createTable("tableExample", {name: string"})
+    createTable("tableExample", {name: string})
     // bad example
     tableExample.insert({name: 123}) // will cause an error
     // good example 
