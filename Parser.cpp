@@ -83,8 +83,8 @@ Command Parser::parse(string input) {
                 while (input[i] != '"' && i < input.length()) {
                     i++;
                 }
-                length = i + 1 - start;
-                string temp = input.substr(start, length);
+                length = i - start;
+                string temp = input.substr(start + 1, length - 1);
                 result.setTableName(temp);
             } else if (input[i] == '{') {
                 start = i + 1;
