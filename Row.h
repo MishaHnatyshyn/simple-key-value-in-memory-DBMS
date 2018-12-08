@@ -17,6 +17,10 @@ public:
         }
     }
 
+    CustomType* getElementByIndex(int index){
+        return fields[index];
+    }
+
     CustomType* returnProperVal(string data, string type){
         if (type == "int") return new CustomInt(data);
         if (type == "string") return new CustomString(data);
@@ -24,11 +28,19 @@ public:
     }
 
     void display(){
-        cout << "ROW DISPLAY" << endl;
+//        cout << "ROW DISPLAY" << endl;
+        string res = "";
+        for (int i = 0; i < fields.size(); ++i) {
+            res += fields[i]->toString() + "\t";
+        }
+        cout << res << endl;
+    }
+
+    string toString(){
         string res = "";
         for (int i = 0; i < fields.size(); ++i) {
             res += fields[i]->toString() + " ";
         }
-        cout << res << endl;
+        return res;
     }
 };

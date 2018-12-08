@@ -10,6 +10,9 @@ public:
     virtual string toString(){
         cout << "ERR" << endl;
     };
+
+    virtual bool compare(string){}
+    virtual void set(string){}
 };
 
 class CustomInt: public CustomType{
@@ -18,7 +21,7 @@ private:
 public:
     CustomInt(string data){
         regex regexInt("^[0-9]$");
-        if (!regex_match(data, regexInt)) cout << "TYPE ERROR" << endl;
+//        if (!regex_match(data, regexInt)) cout << "TYPE ERROR  " << data << endl;
         this->data = atoi(data.c_str());
     }
     CustomInt(int data){
@@ -27,15 +30,20 @@ public:
     virtual string toString(){
         return to_string(data);
     }
+
+    virtual bool compare(string val){
+        return data == atoi(val.c_str());
+    }
+
     int get(){
         return data;
     }
 
-    void set(string data){
+    virtual void set(string data){
         this->data = atoi(data.c_str());
     }
 
-    void set(int data){
+    virtual void set(int data){
         this->data = data;
     }
 };
@@ -68,6 +76,12 @@ public:
     CustomString(string data): data(data){}
     virtual string toString(){
         return data;
+    }
+    virtual bool compare(string val){
+        return data == val;
+    }
+    virtual void set(string val){
+        data = val;
     }
 };
 
