@@ -1,12 +1,19 @@
 #include <iostream>
+#include <vector>
 using namespace std;
+
+struct Data {
+    string fieldName;
+    string data;
+    Data(string fieldName, string data): fieldName(fieldName), data(data){};
+};
 
 class Command {
 private:
     int commandType;
     string tableName;
     string command;
-    string data;
+    vector < Data > data;
 public:
     int getCommandType();
     void setCommandType(int);
@@ -14,6 +21,6 @@ public:
     void setTableName(string);
     string getCommand();
     void setCommand(string);
-    string getData();
-    void setData(string);
+    vector < Data >  getData();
+    void setData(vector< Data >);
 };

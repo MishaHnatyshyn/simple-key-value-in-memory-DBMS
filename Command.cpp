@@ -16,11 +16,11 @@ void Command::setCommand(string command) {
     this->command = command;
 }
 
-string Command::getData() {
+vector < Data >  Command::getData() {
     return data;
 }
 
-void Command::setData(string data) {
+void Command::setData(vector < Data > data) {
     this->data = data;
 }
 
