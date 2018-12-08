@@ -44,8 +44,8 @@ int main() {
 //    newTable.remove("age", "27");
 
 
-    newTable.update(1, "first_name", "AAAAAAA");
-    newTable.update(2, "age", "99");
+    newTable.update(1, Data("first_name", "AAAAAAA"));
+    newTable.update(2, Data("age", "99"));
 
     newTable.display();
 

@@ -24,6 +24,9 @@ public:
     CustomType* returnProperVal(string data, string type){
         if (type == "int") return new CustomInt(data);
         if (type == "string") return new CustomString(data);
+        if (type == "short") return new CustomShort(data);
+        if (type == "float") return new CustomFloat(data);
+        if (type == "bool") return new CustomBool(data);
 
     }
 

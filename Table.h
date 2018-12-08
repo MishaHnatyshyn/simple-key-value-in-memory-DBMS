@@ -2,6 +2,11 @@
 #include <map>
 #include <iterator>
 
+struct Data{
+    string fieldName;
+    string data;
+    Data(string fieldName, string data): fieldName(fieldName), data(data){}
+};
 
 class Table {
 private:
@@ -13,54 +18,79 @@ private:
 public:
     Table(vector<string> fields_name, vector<string> types): fields_name(fields_name), types(types), last_index(0){}
 
+    Table(vector<Data> data): last_index(0){
+        for (int i = 0; i < data.size(); ++i) {
+            fields_name.push_back(data[i].fieldName);
+            types.push_back(data[i].data);
+        }
+    }
+
     void display(){
         for (itr = table.begin(); itr != table.end(); ++itr) {
             itr->second.display();
         }
     }
 
-    void update(int id, string field_name, string value){
-        int fieldIndex = this->getFieldIndex(field_name);
-        table.find(id)->second.getElementByIndex(fieldIndex)->set(value);
+    void update(int id, Data data){
+        int fieldIndex = this->getFieldIndex(data.fieldName);
+        table.find(id)->second.getElementByIndex(fieldIndex)->set(data.data);
     }
 
-    void update(int id, vector<vector<string>> options_update){
+    void update(int id, vector<Data> options_update){
         vector<int> fieldIndexes;
+        fieldIndexes.reserve(options_update.size());
         for (int i = 0; i < options_update.size(); ++i) {
-            fieldIndexes.push_back(this->getFieldIndex(options_update[i][0]));
+            fieldIndexes.push_back(this->getFieldIndex(options_update[i].fieldName));
         }
         for (int j = 0; j < options_update.size(); ++j) {
-            table.find(id)->second.getElementByIndex(fieldIndexes[j])->set(options_update[j][1]);
+            table.find(id)->second.getElementByIndex(fieldIndexes[j])->set(options_update[j].data);
         }
     }
 
 
-    void update(string field_name_find, string value_find, string field_name, string value){
-        int fieldIndexFind = this->getFieldIndex(field_name_find);
-        int fieldIndex = this->getFieldIndex(field_name);
-        vector<Row*> query = findManyByOneOption(field_name_find, value_find);
+    void update(Data queryData, Data updateData){
+        int fieldIndexFind = this->getFieldIndex(queryData.fieldName);
+        int fieldIndex = this->getFieldIndex(updateData.fieldName);
+        vector<Row*> query = findManyByOneOption(queryData.fieldName, queryData.data);
         for (int i = 0; i < query.size(); ++i) {
-            query[i]->getElementByIndex(fieldIndex)->set(value);
+            query[i]->getElementByIndex(fieldIndex)->set(updateData.data);
         }
     }
 
-    void update(vector<vector<string>> options_find, string field_name, string value){
-        int fieldIndex = this->getFieldIndex(field_name);
-        vector<Row*> query = findManyBySeveralOptions(options_find);
-        for (int i = 0; i < query.size(); ++i) {
-            query[i]->getElementByIndex(fieldIndex)->set(value);
-        }
-    }
-
-    void update(vector<vector<string>> options_find, vector<vector<string>> options_update){
+    void update(Data queryData, vector<Data> updateData){
+        int fieldIndexFind = this->getFieldIndex(queryData.fieldName);
         vector<int> fieldIndexes;
-        for (int i = 0; i < options_update.size(); ++i) {
-            fieldIndexes.push_back(this->getFieldIndex(options_update[i][0]));
+        fieldIndexes.reserve(updateData.size());
+        for (int i = 0; i < updateData.size(); ++i) {
+            fieldIndexes.push_back(this->getFieldIndex(updateData[i].fieldName));
         }
-        vector<Row*> query = findManyBySeveralOptions(options_find);
+        vector<Row*> query = findManyByOneOption(queryData.fieldName, queryData.data);
         for (int i = 0; i < query.size(); ++i) {
-            for (int j = 0; j < options_update.size(); ++j) {
-                query[i]->getElementByIndex(fieldIndexes[j])->set(options_update[j][1]);
+            for (int j = 0; j < updateData.size(); ++j) {
+                query[i]->getElementByIndex(fieldIndexes[j])->set(updateData[j].data);
+            }
+
+        }
+    }
+
+    void update(vector<Data> queryData, Data updateData){
+        int fieldIndex = this->getFieldIndex(updateData.fieldName);
+        vector<Row*> query = findManyBySeveralOptions(queryData);
+        for (int i = 0; i < query.size(); ++i) {
+            query[i]->getElementByIndex(fieldIndex)->set(updateData.data);
+        }
+    }
+
+    void update(vector<Data> queryData, vector<Data> updateData){
+        vector<int> fieldIndexes;
+        fieldIndexes.reserve(updateData.size());
+        for (int i = 0; i < updateData.size(); ++i) {
+            fieldIndexes.push_back(this->getFieldIndex(updateData[i].fieldName));
+        }
+        vector<Row*> query = findManyBySeveralOptions(queryData);
+        for (int i = 0; i < query.size(); ++i) {
+            for (int j = 0; j < updateData.size(); ++j) {
+                query[i]->getElementByIndex(fieldIndexes[j])->set(updateData[j].data);
             }
 
         }
@@ -75,15 +105,15 @@ public:
         this->table.erase(id);
     }
 
-    void remove(string field_name, string value){
-        int id = getIndex(field_name, value);
+    void remove(Data data){
+        int id = getIndex(data);
         if (id != -1) table.erase(id);
     }
 
-    int getIndex(string field_name, string value){
-        int fieldIndex = this->getFieldIndex(field_name);
+    int getIndex(Data data){
+        int fieldIndex = this->getFieldIndex(data.fieldName);
         for (itr = table.begin(); itr != table.end(); ++itr) {
-            if (itr->second.getElementByIndex(fieldIndex)->compare(value)) {
+            if (itr->second.getElementByIndex(fieldIndex)->compare(data.data)) {
                 return itr->first;
             }
         }
@@ -125,16 +155,17 @@ public:
         }
     }
 
-    vector<Row*> findManyBySeveralOptions(vector<vector<string>> options){
+    vector<Row*> findManyBySeveralOptions(vector<Data> options){
         vector<Row*> result;
         vector<int> fieldIndexes;
+        fieldIndexes.reserve(options.size());
         for (int i = 0; i < options.size(); ++i) {
-            fieldIndexes.push_back(this->getFieldIndex(options[i][0]));
+            fieldIndexes.push_back(this->getFieldIndex(options[i].fieldName));
         }
         for (itr = table.begin(); itr != table.end(); ++itr) {
             bool flag = true;
             for (int i = 0; i < fieldIndexes.size(); ++i) {
-                if (!itr->second.getElementByIndex(fieldIndexes[i])->compare(options[i][1])) {
+                if (!itr->second.getElementByIndex(fieldIndexes[i])->compare(options[i].data)) {
                     flag = false;
                     break;
                 };
@@ -144,15 +175,16 @@ public:
         return result;
     }
 
-    Row* findOneBySeveralOptions(vector<vector<string>> options){
+    Row* findOneBySeveralOptions(vector<Data> options){
         vector<int> fieldIndexes;
+        fieldIndexes.reserve(options.size());
         for (int i = 0; i < options.size(); ++i) {
-            fieldIndexes.push_back(this->getFieldIndex(options[i][0]));
+            fieldIndexes.push_back(this->getFieldIndex(options[i].fieldName));
         }
         for (itr = table.begin(); itr != table.end(); ++itr) {
             bool flag = true;
             for (int i = 0; i < fieldIndexes.size(); ++i) {
-                if (!itr->second.getElementByIndex(fieldIndexes[i])->compare(options[i][1])) {
+                if (!itr->second.getElementByIndex(fieldIndexes[i])->compare(options[i].data)) {
                     flag = false;
                     break;
                 };
