@@ -1,4 +1,5 @@
 #include "Row.h"
+#include "DBMSError.h"
 #include <map>
 #include <iterator>
 
@@ -8,19 +9,23 @@ private:
     vector<string> fields_name;
     vector<string> types;
     int last_index;
+    string name;
     map<int, Row>::iterator itr;
 public:
-    Table(vector<string> fields_name, vector<string> types): fields_name(fields_name), types(types), last_index(0){}
-
-    Table(vector<Data> data): last_index(0){
+    Table(vector<Data> data, string name): last_index(0), name(name){
         for (int i = 0; i < data.size(); ++i) {
             fields_name.push_back(data[i].fieldName);
             types.push_back(data[i].data);
         }
     }
 
+    string getName(){
+        return name;
+    }
+
     void display(){
         for (itr = table.begin(); itr != table.end(); ++itr) {
+            cout << itr->first << "\t";
             itr->second.display();
         }
     }
@@ -145,12 +150,8 @@ public:
         for (int i = 0; i < fields_name.size(); ++i) {
             if (fields_name[i] == field_name) return i;
         }
+        throw WrongFieldNameError(name, field_name);
         return -1;
-    }
-
-    void add(vector<string> data){
-        last_index++;
-        table.insert(pair<int, Row>(last_index, Row(data, types)));
     }
 
     void add(vector<Data> data){

@@ -1,7 +1,7 @@
 #include <vector>
 #include <string>
 #include <regex>
-
+#include "TypeError.h"
 using namespace std;
 
 
@@ -13,15 +13,17 @@ public:
 
     virtual bool compare(string){}
     virtual void set(string){}
+    virtual void validate(string){}
 };
 
 class CustomInt: public CustomType{
 private:
     int data;
+    regex regexInt;
 public:
     CustomInt(string data){
-        regex regexInt("^[0-9]$");
-//        if (!regex_match(data, regexInt)) cout << "TYPE ERROR  " << data << endl;
+        regexInt = regex("^[0-9]$");
+        validate(data);
         this->data = atoi(data.c_str());
     }
     CustomInt(int data){
@@ -31,7 +33,12 @@ public:
         return to_string(data);
     }
 
+    virtual void validate(string data){
+        if (!regex_match(data, regexInt)) throw IntError(data);
+    }
+
     virtual bool compare(string val){
+        validate(val);
         return data == atoi(val.c_str());
     }
 
@@ -53,10 +60,11 @@ public:
 class CustomFloat: public CustomType{
 private:
     float data;
+    regex regexFloat;
 public:
     CustomFloat(string data){
-        regex regexInt("^[0-9]$");
-//        if (!regex_match(data, regexInt)) cout << "TYPE ERROR  " << data << endl;
+        regexFloat = regex("^[0-9]+\\.[0-9]+$");
+        validate(data);
         this->data = static_cast<float>(atof(data.c_str()));
     }
     CustomFloat(float data){
@@ -68,6 +76,10 @@ public:
 
     virtual bool compare(string val){
         return data == atof(val.c_str());
+    }
+
+    virtual void validate(string data){
+        if (!regex_match(data, regexFloat)) throw FloatError(data);
     }
 
     float get(){
@@ -87,10 +99,11 @@ public:
 class CustomShort: public CustomType{
 private:
     short data;
+    regex regexInt;
 public:
     CustomShort(string data){
-        regex regexInt("^[0-9]$");
-//        if (!regex_match(data, regexInt)) cout << "TYPE ERROR  " << data << endl;
+        regexInt = regex("^[0-9]$");
+        validate(data);
         this->data = (short) atoi(data.c_str());
     }
     CustomShort(short data){
@@ -102,7 +115,13 @@ public:
     }
 
     virtual bool compare(string val){
+        validate(val);
         return data == (short)atoi(val.c_str());
+    }
+
+    virtual void validate(string data){
+        if (!regex_match(data, regexInt)) throw ShortError(data, true);
+        if (abs(atoi(data.c_str())) > 327677) throw ShortError(data, false);
     }
 
     short get(){
@@ -161,6 +180,7 @@ private:
     char* data;
 public:
     CustomTinyText(string data){
+        validate(data);
         data = new char[data.length()];
         this->data = strdup(data.c_str());
     }
@@ -171,7 +191,11 @@ public:
         return data;
     }
     virtual bool compare(string val){
+        validate(val);
         return data == val;
+    }
+    virtual void validate(string data){
+        if (data.length() > 256) throw TinyTextError(data);
     }
     virtual void set(string val){
         data = new char[val.length()];
@@ -184,14 +208,19 @@ private:
     bool data;
 public:
     CustomBool(string data){
+        validate(data);
         this->data = data == "true";
     }
     virtual string toString(){
         return data ? "true" : "false";
     }
     virtual bool compare(string val){
+        validate(val);
         bool castedVal = (val == "true");
         return data == castedVal;
+    }
+    virtual void validate(string data){
+        if (data != "true" || data != "false") throw BoolError(data);
     }
     virtual void set(string val){
         this->data = (val == "true");

@@ -8,7 +8,7 @@ struct TableListNode{
 
 class DBMS {
 private:
-    vector<TableListNode> tables;
+    vector<Table*> tables;
 public:
     void execute(Command command){
         int commandType = command.getCommandType();
@@ -16,8 +16,7 @@ public:
         if (commandType == 1){
             if (commandText == "createTable"){
                 createTable(command.getTableName(), command.getData());
-                cout<<"TABLE CREATED"
-                      ""<<endl;
+                cout<<"TABLE CREATED" <<endl;
             }
         } else if (commandType == 2){
             if (commandText == "insert"){
@@ -38,12 +37,12 @@ public:
     }
 
     void createTable(string name, vector<Data> fields){
-        tables.push_back(TableListNode(new Table(fields), name));
+        tables.push_back(new Table(fields, name));
     }
 
     void displayTablesName(){
         for (int i = 0; i < tables.size(); ++i) {
-            cout << tables[i].name << endl;
+            cout << tables[i]->getName() << endl;
         }
     }
 
@@ -66,7 +65,8 @@ public:
 
     Table* getTableByName(string name){
         for (int i = 0; i < tables.size(); ++i) {
-            if (tables[i].name == name) return tables[i].table;
+            if (tables[i]->getName() == name) return tables[i];
         }
+        throw WrongTableNameError(name);
     }
 };

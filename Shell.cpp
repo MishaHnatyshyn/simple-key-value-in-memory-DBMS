@@ -9,21 +9,24 @@ void Shell::start() {
         string input;
         getline(cin, input);
         try {
-
             Command c = a.parse(input);
 
-            cout << "==================== INPUT ====================" << endl;
+            cout << "\n==================== INPUT ====================\n" << endl;
             cout << c.getCommandType() << " " << c.getTableName() << " " << c.getCommand() << endl;
             vector < Data > temp = c.getData();
 
             for(Data i : temp){
                 cout << "field: " << i.fieldName << " data: " << i.data << endl;
             }
-            cout << "==================== INPUT ====================" << endl;
+            cout << "\n==================== INPUT ====================\n" << endl;
 
-            cout << "==================== OUTPUT ====================" << endl;
-            db.execute(c);
-            cout << "==================== OUTPUT ====================" << endl;
+            cout << "\n==================== OUTPUT ====================\n" << endl;
+            try{
+                db.execute(c);
+            } catch (Error &error){
+                error.showError();
+            }
+            cout << "\n==================== OUTPUT ====================\n" << endl;
         } catch (ParserError &e){
             e.showError();
         }

@@ -8,18 +8,11 @@ using namespace std;
 class Row{
 private:
     vector<CustomType*> fields;
-    int count;
+    int fieldsCount;
 public:
-    Row(vector<CustomType*> fields): fields(fields){}
-
-    Row(vector<string> data, vector<string> types){
-        for (int i = 0; i < data.size(); ++i) {
-            fields.push_back(returnProperVal(data[i], types[i]));
-        }
-    }
-
     Row(vector<Data> data, vector<string> types){
-        for (int i = 0; i < data.size(); ++i) {
+        fieldsCount = data.size();
+        for (int i = 0; i < fieldsCount; ++i) {
             fields.push_back(returnProperVal(data[i].data, types[i]));
         }
     }
@@ -34,13 +27,14 @@ public:
         if (type == "short") return new CustomShort(data);
         if (type == "float") return new CustomFloat(data);
         if (type == "bool") return new CustomBool(data);
+        if (type == "tinytext") return new CustomTinyText(data);
 
     }
 
     void display(){
 //        cout << "ROW DISPLAY" << endl;
         string res = "";
-        for (int i = 0; i < fields.size(); ++i) {
+        for (int i = 0; i < fieldsCount; ++i) {
             res += fields[i]->toString() + "\t";
         }
         cout << res << endl;
@@ -48,7 +42,7 @@ public:
 
     string toString(){
         string res = "";
-        for (int i = 0; i < fields.size(); ++i) {
+        for (int i = 0; i < fieldsCount; ++i) {
             res += fields[i]->toString() + " ";
         }
         return res;
