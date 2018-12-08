@@ -2,12 +2,6 @@
 #include <map>
 #include <iterator>
 
-struct Data{
-    string fieldName;
-    string data;
-    Data(string fieldName, string data): fieldName(fieldName), data(data){}
-};
-
 class Table {
 private:
     map<int, Row> table;
@@ -110,6 +104,14 @@ public:
         if (id != -1) table.erase(id);
     }
 
+    void remove(vector<Data> data){
+        vector<int> ids = getIndex(data);
+        for (int i = 0; i < ids.size(); ++i) {
+            if (ids[i] != -1) table.erase(ids[i]);
+        }
+
+    }
+
     int getIndex(Data data){
         int fieldIndex = this->getFieldIndex(data.fieldName);
         for (itr = table.begin(); itr != table.end(); ++itr) {
@@ -117,6 +119,26 @@ public:
                 return itr->first;
             }
         }
+    }
+
+    vector<int> getIndex(vector<Data> options){
+        vector<int> result;
+        vector<int> fieldIndexes;
+        fieldIndexes.reserve(options.size());
+        for (int i = 0; i < options.size(); ++i) {
+            fieldIndexes.push_back(this->getFieldIndex(options[i].fieldName));
+        }
+        for (itr = table.begin(); itr != table.end(); ++itr) {
+            bool flag = true;
+            for (int i = 0; i < fieldIndexes.size(); ++i) {
+                if (!itr->second.getElementByIndex(fieldIndexes[i])->compare(options[i].data)) {
+                    flag = false;
+                    break;
+                };
+            }
+            if (flag) result.push_back(itr->first);
+        }
+        return result;
     }
 
     int getFieldIndex(string field_name){
@@ -127,6 +149,11 @@ public:
     }
 
     void add(vector<string> data){
+        last_index++;
+        table.insert(pair<int, Row>(last_index, Row(data, types)));
+    }
+
+    void add(vector<Data> data){
         last_index++;
         table.insert(pair<int, Row>(last_index, Row(data, types)));
     }

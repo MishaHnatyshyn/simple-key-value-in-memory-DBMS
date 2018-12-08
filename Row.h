@@ -1,5 +1,6 @@
 #include <iostream>
 #include "CustomType.h"
+#include "Command.h"
 
 using namespace std;
 
@@ -17,13 +18,19 @@ public:
         }
     }
 
+    Row(vector<Data> data, vector<string> types){
+        for (int i = 0; i < data.size(); ++i) {
+            fields.push_back(returnProperVal(data[i].data, types[i]));
+        }
+    }
+
     CustomType* getElementByIndex(int index){
         return fields[index];
     }
 
     CustomType* returnProperVal(string data, string type){
         if (type == "int") return new CustomInt(data);
-        if (type == "string") return new CustomString(data);
+        if (type == "text") return new CustomString(data);
         if (type == "short") return new CustomShort(data);
         if (type == "float") return new CustomFloat(data);
         if (type == "bool") return new CustomBool(data);

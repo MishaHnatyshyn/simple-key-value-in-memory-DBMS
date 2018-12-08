@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
+//#include "DBMS.h"
 using namespace std;
 
-struct Data {
+struct Data{
     string fieldName;
     string data;
-    Data(string fieldName, string data): fieldName(fieldName), data(data){};
+    Data(string fieldName, string data): fieldName(fieldName), data(data){}
 };
 
 class Command {
