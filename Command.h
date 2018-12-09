@@ -14,7 +14,8 @@ private:
     int commandType;
     string tableName;
     string command;
-    vector < Data > data;
+    vector < Data > dataToFind;
+    vector < Data > dataToInsert;
 public:
     int getCommandType();
     void setCommandType(int);
@@ -22,6 +23,8 @@ public:
     void setTableName(string);
     string getCommand();
     void setCommand(string);
-    vector < Data >  getData();
-    void setData(vector< Data >);
+    vector < Data >  getDataToFind();
+    vector < Data >  getDataToInsert();
+    void setDataToFind(vector< Data >);
+    void setDataToInsert(vector< Data >);
 };

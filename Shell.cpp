@@ -8,14 +8,23 @@ void Shell::start() {
         cout << endl << "> ";
         string input;
         getline(cin, input);
+        if(input == "exit"){
+            break;
+        }
         try {
             Command c = a.parse(input);
 
             cout << "\n==================== INPUT ====================\n" << endl;
             cout << c.getCommandType() << " " << c.getTableName() << " " << c.getCommand() << endl;
-            vector < Data > temp = c.getData();
+            vector < Data > tempFindData = c.getDataToFind();
+            vector < Data > tempInsertData = c.getDataToInsert();
+            cout << "Data to find: " << endl;
+            for(Data i : tempFindData){
+                cout << "field: " << i.fieldName << " data: " << i.data << endl;
+            }
 
-            for(Data i : temp){
+            cout << "Data to Insert: " << endl;
+            for(Data i : tempInsertData){
                 cout << "field: " << i.fieldName << " data: " << i.data << endl;
             }
             cout << "\n==================== INPUT ====================\n" << endl;

@@ -65,11 +65,57 @@ Command Parser::parse(string input) {
             } else if (input[i] == '}') {
                 length = i - start;
                 string temp = input.substr(start, length);
-                result.setData(parseData(temp));
+                result.setDataToInsert(parseData(temp));
             }
         }
         return result;
-    } else if (regex_match(input, firstTypeCommand)) {
+    }
+    else if (regex_match(input, thirdTypeCommand)) {
+        result.setCommandType(2);
+        int stage = 0;
+        for (int i = 0; i < input.length(); i++) {
+            if (input[i] == '.') {
+                length = i - start;
+                string temp = input.substr(start, length);
+                start = i + 1;
+                result.setTableName(temp);
+            } else if (input[i] == '(') {
+                length = i - start;
+                string temp = input.substr(start, length);
+                start = i + 1;
+                result.setCommand(temp);
+            } else if (input[i] == '{') {
+                start = i+1;
+            } else if (input[i] == '}') {
+                length = i - start;
+                string temp = input.substr(start, length);
+                if (stage == 0){
+                    result.setDataToFind(parseData(temp));
+                    stage =1;
+                } else {
+                    result.setDataToInsert(parseData(temp));
+                }
+            }
+        }
+        return result;
+    }
+    else if(regex_match(input, fourthTypeCommand)){
+        for (int i = 0; i < input.length(); i++) {
+            if (input[i] == '.') {
+                length = i - start;
+                string temp = input.substr(start, length);
+                start = i + 1;
+                result.setTableName(temp);
+            } else if (input[i] == '(') {
+                length = i - start;
+                string temp = input.substr(start, length);
+                start = i + 1;
+                result.setCommand(temp);
+                break;
+                }
+            }
+    }
+    else if (regex_match(input, firstTypeCommand)) {
         result.setCommandType(1);
         for (int i = 0; i < input.length(); i++) {
             if (input[i] == '(') {
@@ -91,7 +137,7 @@ Command Parser::parse(string input) {
             } else if (input[i] == '}') {
                 length = i - start;
                 string temp = input.substr(start, length);
-                result.setData(parseData(temp));
+                result.setDataToInsert(parseData(temp));
             }
         }
         return result;

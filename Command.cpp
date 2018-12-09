@@ -16,12 +16,20 @@ void Command::setCommand(string command) {
     this->command = command;
 }
 
-vector < Data >  Command::getData() {
-    return data;
+vector < Data >  Command::getDataToFind() {
+    return dataToFind;
 }
 
-void Command::setData(vector < Data > data) {
-    this->data = data;
+void Command::setDataToFind(vector < Data > data) {
+    this->dataToFind = data;
+}
+
+vector < Data >  Command::getDataToInsert() {
+    return dataToInsert;
+}
+
+void Command::setDataToInsert(vector < Data > data) {
+    this->dataToInsert = data;
 }
 
 string Command::getTableName(){
