@@ -95,6 +95,18 @@ public:
         }
     }
 
+    void updateOne(vector<Data> queryData, vector<Data> updateData){
+        vector<int> fieldIndexes;
+        fieldIndexes.reserve(updateData.size());
+        for (int i = 0; i < updateData.size(); ++i) {
+            fieldIndexes.push_back(this->getFieldIndex(updateData[i].fieldName));
+        }
+        Row* query = findOneBySeveralOptions(queryData);
+        for (int j = 0; j < updateData.size(); ++j) {
+            query->getElementByIndex(fieldIndexes[j])->set(updateData[j].data);
+        }
+    }
+
     void add(Row row){
         last_index++;
         table.insert(pair<int, Row>(last_index, row));
@@ -117,12 +129,35 @@ public:
 
     }
 
+    void removeOne(vector<Data> data){
+        int id = getIndexOfOne(data);
+        if (id != -1) table.erase(id);
+    }
+
     int getIndex(Data data){
         int fieldIndex = this->getFieldIndex(data.fieldName);
         for (itr = table.begin(); itr != table.end(); ++itr) {
             if (itr->second.getElementByIndex(fieldIndex)->compare(data.data)) {
                 return itr->first;
             }
+        }
+    }
+
+    int getIndexOfOne(vector<Data> options){
+        vector<int> fieldIndexes;
+        fieldIndexes.reserve(options.size());
+        for (int i = 0; i < options.size(); ++i) {
+            fieldIndexes.push_back(this->getFieldIndex(options[i].fieldName));
+        }
+        for (itr = table.begin(); itr != table.end(); ++itr) {
+            bool flag = true;
+            for (int i = 0; i < fieldIndexes.size(); ++i) {
+                if (!itr->second.getElementByIndex(fieldIndexes[i])->compare(options[i].data)) {
+                    flag = false;
+                    break;
+                };
+            }
+            return  itr->first;
         }
     }
 
@@ -212,6 +247,7 @@ public:
         for (itr = table.begin(); itr != table.end(); ++itr) {
             bool flag = true;
             for (int i = 0; i < fieldIndexes.size(); ++i) {
+                cout << itr->second.getElementByIndex(fieldIndexes[i])->toString() << " " << options[i].data << endl;
                 if (!itr->second.getElementByIndex(fieldIndexes[i])->compare(options[i].data)) {
                     flag = false;
                     break;

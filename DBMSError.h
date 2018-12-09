@@ -25,3 +25,23 @@ public:
         cout << "Can not find field with the name " << fieldName << " in the table "<< tableName << endl;
     }
 };
+
+class ExistingTableNameError: public DBMSError{
+    string tableName;
+public:
+    ExistingTableNameError(string tableName): tableName(tableName){}
+    virtual void showError(){
+        cout << "Table with a name " << tableName << " already exists." << endl;
+    }
+};
+
+
+class WrongCommand: public DBMSError{
+    string command;
+public:
+    WrongCommand(string command): command(command){}
+    virtual void showError(){
+        cout << "Wrong command " << command << endl;
+    }
+};
+

@@ -38,10 +38,14 @@ vector < string > test = {
 
 };
 
-TEST_CASE( "Parse create table command", "[parser][table]" ) {
+TEST_CASE( "Parse valid create table command", "[correct][parser][table]" ) {
     Parser parser = Parser();
     CHECK_NOTHROW(parser.parse(test[0]));
     CHECK_NOTHROW(parser.parse(test[1]));
+};
+
+TEST_CASE( "Parse invalid create table command", "[incorrect][parser][table]" ) {
+    Parser parser = Parser();
     CHECK_THROWS(parser.parse(test[2]));
     CHECK_THROWS(parser.parse(test[3]));
     CHECK_THROWS(parser.parse(test[4]));
@@ -50,4 +54,6 @@ TEST_CASE( "Parse create table command", "[parser][table]" ) {
     CHECK_THROWS(parser.parse(test[7]));
     CHECK_THROWS(parser.parse(test[8]));
 };
+
+
 
