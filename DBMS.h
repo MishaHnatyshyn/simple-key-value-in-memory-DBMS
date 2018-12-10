@@ -22,10 +22,17 @@ public:
             } else if (commandText == "dropTable"){
                 dropTable(command.getTableName());
                 cout<<"TABLE DROPPED" <<endl;
+            }
+            else  if (commandText == "display"){
+                displayTable(command.getTableName());
+            } else if (commandText == "tables"){
+                displayTablesName();
             } else throw WrongCommand(commandText);
         } else if (commandType == 2){
             if (commandText == "insert"){
                 insert(command.getTableName(), command.getDataToInsert());
+            } else if (commandText == "display"){
+                displayTable(command.getTableName());
             } else if (commandText == "getOneRow"){
                 findOne(command.getTableName(), command.getDataToInsert());
             } else if (commandText == "getRows"){

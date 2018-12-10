@@ -21,3 +21,19 @@ public:
         cout << setw(position + 1) << "|" << endl;
     };
 };
+
+class NoTableName : public ShellError {
+public:
+    virtual void showError(){
+        ShellError::showError();
+        cout << "No table name specified" << endl;
+    };
+};
+
+class UndefinedError : public ShellError {
+public:
+    virtual void showError(){
+        ShellError::showError();
+        cout << "Undefined Error" << endl;
+    };
+};

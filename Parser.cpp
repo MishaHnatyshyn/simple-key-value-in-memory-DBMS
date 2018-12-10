@@ -45,75 +45,33 @@ string Parser::deleteSpacesFromString(string str) {
 
 Command Parser::parse(string input) {
     input = deleteSpacesFromString(input);
-    Command result = Command();
+    Command result;
     int start = 0, length = 0;
+    bool dotFlag = true;
     if (regex_match(input, secondTypeCommand)) {
         result.setCommandType(2);
         for (int i = 0; i < input.length(); i++) {
-            if (input[i] == '.') {
+            if (input[i] == '.' && dotFlag) {
                 length = i - start;
                 string temp = input.substr(start, length);
                 start = i + 1;
                 result.setTableName(temp);
+                dotFlag = false;
             } else if (input[i] == '(') {
                 length = i - start;
                 string temp = input.substr(start, length);
                 start = i + 1;
                 result.setCommand(temp);
-            } else if (input[i] == '{') {
-                start = i+1;
-            } else if (input[i] == '}') {
+            } else if (input[i] == ')') {
                 length = i - start;
                 string temp = input.substr(start, length);
-                result.setDataToInsert(parseData(temp));
+                cout << temp;
+                result.setRawArgs(temp);
             }
         }
+        CommandChecker checker;
+        checker.checkCommand(&result);
         return result;
-    }
-    else if (regex_match(input, thirdTypeCommand)) {
-        result.setCommandType(2);
-        int stage = 0;
-        for (int i = 0; i < input.length(); i++) {
-            if (input[i] == '.') {
-                length = i - start;
-                string temp = input.substr(start, length);
-                start = i + 1;
-                result.setTableName(temp);
-            } else if (input[i] == '(') {
-                length = i - start;
-                string temp = input.substr(start, length);
-                start = i + 1;
-                result.setCommand(temp);
-            } else if (input[i] == '{') {
-                start = i+1;
-            } else if (input[i] == '}') {
-                length = i - start;
-                string temp = input.substr(start, length);
-                if (stage == 0){
-                    result.setDataToFind(parseData(temp));
-                    stage =1;
-                } else {
-                    result.setDataToInsert(parseData(temp));
-                }
-            }
-        }
-        return result;
-    }
-    else if(regex_match(input, fourthTypeCommand)){
-        for (int i = 0; i < input.length(); i++) {
-            if (input[i] == '.') {
-                length = i - start;
-                string temp = input.substr(start, length);
-                start = i + 1;
-                result.setTableName(temp);
-            } else if (input[i] == '(') {
-                length = i - start;
-                string temp = input.substr(start, length);
-                start = i + 1;
-                result.setCommand(temp);
-                break;
-                }
-            }
     }
     else if (regex_match(input, firstTypeCommand)) {
         result.setCommandType(1);
@@ -123,23 +81,16 @@ Command Parser::parse(string input) {
                 string temp = input.substr(start, length);
                 start = i + 1;
                 result.setCommand(temp);
-            } else if (input[i] == '"') {
-                start = i;
-                i++;
-                while (input[i] != '"' && i < input.length()) {
-                    i++;
-                }
-                length = i - start;
-                string temp = input.substr(start + 1, length - 1);
-                result.setTableName(temp);
-            } else if (input[i] == '{') {
-                start = i + 1;
-            } else if (input[i] == '}') {
+            }
+            else if (input[i] == ')') {
                 length = i - start;
                 string temp = input.substr(start, length);
-                result.setDataToInsert(parseData(temp));
+                cout << temp;
+                result.setRawArgs(temp);
             }
         }
+        CommandChecker checker;
+        checker.checkCommand(&result);
         return result;
     } else {
         int i = 0, type = 0;
