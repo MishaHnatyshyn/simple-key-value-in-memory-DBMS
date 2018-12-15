@@ -30,7 +30,14 @@ struct CommandStruct {
 class CommandChecker {
      vector < CommandStruct > commands = {
              CommandStruct("createTable", 1, 1, 3),
+             CommandStruct("dropTable", 1, 1, 0),
              CommandStruct("insert", 1, 1, 1),
+             CommandStruct("getOneRow", 1, 1, 1),
+             CommandStruct("getRows", 1, 1, 1),
+             CommandStruct("deleteRow", 1, 1, 1),
+             CommandStruct("deleteRows", 1, 1, 1),
+             CommandStruct("changeOneRowData", 1, 1, 4),
+             CommandStruct("changeData", 1, 1, 4),
              CommandStruct("tables", 0, 0),
              CommandStruct("delete", 1, 1, 0),
              CommandStruct("display", 0, 1),
@@ -40,7 +47,7 @@ public:
          for (CommandStruct i : commands){
              if(i.name == item->getCommand()) {
                  if (i.shouldHaveArgs) item->parseRawArgs(i.argsTypeNumber);
-                 if(i.shouldHaveTableName && item->getTableName() == ""){
+                 if (i.shouldHaveTableName && item->getTableName() == ""){
                      throw NoTableName();
                  }
                  return;
