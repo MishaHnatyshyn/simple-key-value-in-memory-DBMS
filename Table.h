@@ -1,16 +1,17 @@
 #include "Row.h"
 #include "DBMSError.h"
 #include <map>
+#include <unordered_map>
 #include <iterator>
 
 class Table {
 private:
-    map<int, Row> table;
+    unordered_map<int, Row> table;
     vector<string> fields_name;
     vector<string> types;
     int last_index;
     string name;
-    map<int, Row>::iterator itr;
+    unordered_map<int, Row>::iterator itr;
 public:
     Table(vector<Data> data, string name);
 
