@@ -53,6 +53,6 @@ public:
                  return;
              }
          }
-        throw UndefinedError();
+        throw NoSuchCommand();
     }
 };

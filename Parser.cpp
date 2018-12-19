@@ -65,7 +65,6 @@ Command Parser::parse(string input) {
             } else if (input[i] == ')') {
                 length = i - start;
                 string temp = input.substr(start, length);
-                cout << temp;
                 result.setRawArgs(temp);
             }
         }

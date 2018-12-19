@@ -75,9 +75,12 @@ void Command::parseRawArgs(int typeOfArgs){
         else if (typeOfArgs == 4) {
             string object1, object2;
             for (int i = 0; i < rawArgs.length(); ++i) {
-                if(rawArgs[i] == ','){
+                if(rawArgs[i] == '}'){
+                    i++;
                     object1 = rawArgs.substr(1, i-2);
-                    object2 = rawArgs.substr(i+2, rawArgs.length() - 2);
+                    object2 = rawArgs.substr(i+2, rawArgs.length() - (i + 3));
+                    cout << rawArgs << " Check" << endl;
+                    cout << object2 << " Check" << endl;
                     break;
                 }
             }

@@ -37,3 +37,11 @@ public:
         cout << "Undefined Error" << endl;
     };
 };
+
+class NoSuchCommand : public ShellError {
+public:
+    virtual void showError(){
+        ShellError::showError();
+        cout << "No such command" << endl;
+    };
+};
