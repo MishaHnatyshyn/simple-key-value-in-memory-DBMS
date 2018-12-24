@@ -12,6 +12,21 @@ Row::Row(vector<Data> data, vector<string> types){
     }
 }
 
+Row::Row(vector<Data> data, vector<string> types, vector<string> fieldNames){
+    fieldsCount = fieldNames.size();
+    for (int i = 0; i < fieldsCount; ++i) {
+        bool flag = false;
+        for (int j = 0; j < data.size(); ++j) {
+            if (data[j].fieldName == fieldNames[i]) {
+                fields.push_back(returnProperVal(data[j].data, types[i]));
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) fields.push_back(returnDefaultVal(types[i]));
+    }
+}
+
 CustomType* Row::getElementByIndex(int index){
     return fields[index];
 }
@@ -23,7 +38,16 @@ CustomType* Row::returnProperVal(string data, string type){
     if (type == "float") return new CustomFloat(data);
     if (type == "bool") return new CustomBool(data);
     if (type == "tinytext") return new CustomTinyText(data.substr(1, data.length()-2));
+}
 
+
+CustomType* Row::returnDefaultVal(string type){
+    if (type == "int") return new CustomInt();
+    if (type == "text") return new CustomString();
+    if (type == "short") return new CustomShort();
+    if (type == "float") return new CustomFloat();
+    if (type == "bool") return new CustomBool();
+    if (type == "tinytext") return new CustomTinyText();
 }
 
 void Row::display(){

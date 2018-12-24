@@ -21,6 +21,10 @@ private:
     int data;
     regex regexInt;
 public:
+
+
+    CustomInt(): data(0){};
+
     CustomInt(string data){
         regexInt = regex("^[0-9]$");
         validate(data);
@@ -29,6 +33,7 @@ public:
     CustomInt(int data){
         this->data = data;
     }
+
     virtual string toString(){
         return to_string(data);
     }
@@ -65,10 +70,12 @@ private:
     float data;
     regex regexFloat;
 public:
+    CustomFloat(): data(0){};
+
     CustomFloat(string data){
         regexFloat = regex("^[0-9]+\\.[0-9]+$");
         validate(data);
-        this->data = static_cast<float>(atof(data.c_str()));
+        this->data = atof(data.c_str());
     }
     CustomFloat(float data){
         this->data = data;
@@ -105,6 +112,8 @@ private:
     short data;
     regex regexInt;
 public:
+    CustomShort(): data(0){}
+
     CustomShort(string data){
         regexInt = regex("^[0-9]$");
         validate(data);
@@ -167,7 +176,11 @@ class CustomString: public CustomType{
 private:
     string data;
 public:
+
+    CustomString(): data(""){}
+
     CustomString(string data): data(data){}
+
     virtual string toString(){
         return data;
     }
@@ -178,6 +191,9 @@ public:
     virtual void set(string val){
         data = val;
     }
+    string get(){
+        return data;
+    }
 };
 
 
@@ -185,6 +201,10 @@ class CustomTinyText: public CustomType{
 private:
     char* data;
 public:
+    CustomTinyText(){
+        this->data = new char[1];
+    }
+
     CustomTinyText(string data){
         validate(data);
         data = new char[data.length()];
@@ -214,6 +234,9 @@ class CustomBool: public CustomType{
 private:
     bool data;
 public:
+
+    CustomBool(): data(false){};
+
     CustomBool(string data){
         validate(data);
         this->data = data == "true";
