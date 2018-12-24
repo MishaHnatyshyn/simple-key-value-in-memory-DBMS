@@ -183,7 +183,8 @@ int Table::getFieldIndex(string field_name){
 
 void Table::add(vector<Data> data){
     last_index++;
-    table.insert(pair<int, Row>(last_index, Row(data, types)));
+//    table.insert(pair<int, Row>(last_index, Row(data, types)));
+    table.insert(pair<int, Row>(last_index, Row(data, types, fields_name)));
 }
 
 Row* Table::findById(int id){

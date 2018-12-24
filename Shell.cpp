@@ -1,5 +1,9 @@
 #include "Shell.h"
 
+
+
+
+
 void Shell::start() {
     Parser a = Parser();
     DBMS db;
@@ -13,7 +17,7 @@ void Shell::start() {
         try {
             Command c = a.parse(input);
 
-            cout << "\n==================== INPUT ====================\n" << endl;
+            /*cout << "\n==================== INPUT ====================\n" << endl;
             cout << input << endl;
 
             cout << "\n==================== PARSED DATA ====================\n" << endl;
@@ -29,7 +33,7 @@ void Shell::start() {
             cout << "Data to Insert: " << endl;
             for(Data i : tempInsertData){
                 cout << "field:\t" << i.fieldName << " data:\t"<< i.data << endl;
-            }
+            }*/
 
           cout << "\n==================== OUTPUT ====================\n" << endl;
 
