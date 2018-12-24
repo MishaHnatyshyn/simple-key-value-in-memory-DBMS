@@ -50,16 +50,28 @@ void Command::setRawArgs(string rawArgs){
 
 void Command::parseRawArgs(int typeOfArgs){
     if (rawArgs == ""){
-        cout << "no args" << endl;
-        return;
+        throw NoArguments();
     }
     if(regex_match(rawArgs, argTypes[typeOfArgs])){
         if((typeOfArgs) == 0){
-            setTableName(rawArgs.substr(1, rawArgs.length() - 2));
+            string temp = rawArgs.substr(1, rawArgs.length() - 2);
+            if(!regex_match(temp, regex("[a-zA-Z][a-zA-Z0-9]*"))){
+                throw StringError();
+            }
+            setTableName(temp);
         }
         else if (typeOfArgs == 1) {
-            setDataToInsert(parseData(rawArgs.substr(1, rawArgs.length() - 2)));
-        } else if (typeOfArgs == 2 || typeOfArgs == 3) {
+            vector < Data > temp = parseData(rawArgs.substr(1, rawArgs.length() - 2));
+            for(Data item : temp) {
+                if(!regex_match(item.fieldName, regex("[a-zA-Z][a-zA-Z0-9]*"))){
+                    throw StringError();
+                }
+                if(!regex_match(item.data, regex(R"(((\".*\")|(true)|(false)|([0-9]*(\.)?[0-9]*)))"))){
+                    throw typeError(item.data);
+                }
+            }
+            setDataToInsert(temp);
+        } else if (typeOfArgs == 3) {
             string name, object;
             for (int i = 0; i < rawArgs.length(); ++i) {
                 if(rawArgs[i] == ','){
@@ -68,9 +80,20 @@ void Command::parseRawArgs(int typeOfArgs){
                     break;
                 }
             }
+            if(!regex_match(name, regex("[a-zA-Z][a-zA-Z0-9]*"))){
+                throw StringError();
+            }
+            vector < Data > temp = parseData(object.substr(1, object.length() - 2));
+            for(Data item : temp) {
+                if(!regex_match(item.fieldName, regex("[a-zA-Z][a-zA-Z0-9]*"))){
+                    throw StringError();
+                }
+                if(!regex_match(item.data, regex(R"((int)|(short)|(float)|(text)|(tinyText)|(bool))"))){
+                    throw dataTypeError(item.data);
+                }
+            }
             setTableName(name);
-            cout << "tableNameAdded" << getTableName() << endl;
-            setDataToInsert(parseData(object.substr(1, object.length() - 2)));
+            setDataToInsert(temp);
         }
         else if (typeOfArgs == 4) {
             string object1, object2;
@@ -79,15 +102,34 @@ void Command::parseRawArgs(int typeOfArgs){
                     i++;
                     object1 = rawArgs.substr(1, i-2);
                     object2 = rawArgs.substr(i+2, rawArgs.length() - (i + 3));
-                    cout << rawArgs << " Check" << endl;
-                    cout << object2 << " Check" << endl;
                     break;
                 }
             }
-            setDataToFind(parseData(object1));
-            setDataToInsert(parseData(object2));
+            vector < Data > temp1 = parseData(object1);
+            vector < Data > temp2 = parseData(object2);
+
+            for(Data item : temp1) {
+                if(!regex_match(item.fieldName, regex("[a-zA-Z][a-zA-Z0-9]*"))){
+                    throw StringError();
+                }
+                if(!regex_match(item.data, regex(R"(((\".*\")|(true)|(false)|([0-9]*(\.)?[0-9]*)))"))){
+                    throw dataTypeError(item.data);
+                }
+            }
+
+
+            for(Data item : temp2) {
+                if(!regex_match(item.fieldName, regex("[a-zA-Z][a-zA-Z0-9]*"))){
+                    throw StringError();
+                }
+                if(!regex_match(item.data, regex(R"(((\".*\")|(true)|(false)|([0-9]*(\.)?[0-9]*)))"))){
+                    throw dataTypeError(item.data);
+                }
+            }
+            setDataToFind(temp1);
+            setDataToInsert(temp2);
         }
     } else {
-      throw UndefinedError();
+      throw WrongArgument(typeOfArgs);
     }
 }

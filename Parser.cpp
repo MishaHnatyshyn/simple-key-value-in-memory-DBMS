@@ -84,7 +84,6 @@ Command Parser::parse(string input) {
             else if (input[i] == ')') {
                 length = i - start;
                 string temp = input.substr(start, length);
-                cout << temp;
                 result.setRawArgs(temp);
             }
         }
@@ -92,71 +91,28 @@ Command Parser::parse(string input) {
         checker.checkCommand(&result);
         return result;
     } else {
-        int i = 0, type = 0;
+        int i = 1, type = 0;
+        if(!regex_match(string(1, input[0]), regex("[a-zA-Z]"))) {
+            throw ParserError(input, 0);
+        }
         while(i < input.length()){
-            if(input[i] == '.'){
-                if(i == 0) throw ParserError(input, i);
+            if(input[i] == '.' && type == 0){
                 type = 2;
             }
             else if(input[i] == '('){
-                if(i == 0) throw ParserError(input, i);
                 if(type == 0){
                     type = 1;
                 }
-                i++;
-                break;
-            }
-            else if(!regex_match(string(1, input[i]), regex("[a-zA-Z]"))){
-                throw ParserError(input, i);
-            }
-            i++;
-        }
-        if(type == 1){
-            if(input[i] != '"' ) throw ParserError(input, i);
-            i++;
-            while(input[i] != '"' && i < input.length()){i++;};
-            i++;
-            if(input[i] != ',') throw ParserError(input, i);
-            i++;
-            if(input[i] != '{') throw ParserError(input, i);
-            while (input[i] != '}' && i < input.length()){
-                while(input[i] != ':' && i < input.length()){
-                    if(!regex_match(string(1, input[i]), regex("[a-zA-Z]"))) throw ParserError(input, i);
-                    i++;
-                }
-                i++;
-                while(input[i] != ',' && i < input.length()){
-                    if(!regex_match(string(1, input[i]), regex("[a-zA-Z]"))) throw ParserError(input, i);
-                    i++;
-                }
-                i++;
-            }
-            if(input[i] != ')') throw ParserError(input, i);
-        } else if (type == 2){
-            if(input[i] != '{' ) throw ParserError(input, i);
-            i++;
-            while (input[i] != '}' && i < input.length()){
-                while(input[i] != ':' && i < input.length()){
-                    if(!regex_match(string(1, input[i]), regex("[a-zA-Z]"))) throw ParserError(input, i);
-                    i++;
-                }
-                i++;
-                while(input[i] != ',' && input[i] != '}' && i < input.length()){
-                    if(input[i] == '"'){
-                        i++;
-                        while(input[i] != '"' && i < input.length()) {
-                            i++;
-                        }
-                        if(input[i] != '"') throw ParserError(input, i);
+                while(i < input.length()){
+                    if (input[i] == ')' && i != input.length() - 1){
+                        throw ParserError(input, ++i);
                     }
-                    else if(!regex_match(string(1, input[i]), regex("[0-9,\\.,t,r,u,e,f,a,l,s]"))) throw ParserError(input, i);
                     i++;
                 }
-                i++;
+            } else if (!regex_match(string(1, input[i]), regex("[a-zA-Z0-9]"))) {
+                if(i == 0) throw ParserError(input, i);
             }
-            if(input[i] != ')') throw ParserError(input, i);
-        } else {
-            throw ParserError(input, i);
+            i++;
         }
         throw ParserError(input, i);
     }

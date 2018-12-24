@@ -20,11 +20,11 @@ private:
     vector < Data > dataToFind;
     vector < Data > dataToInsert;
     vector < regex > argTypes {
-        regex("\\\"[a-zA-Z][a-zA-Z0-9]*\\\""),
-        regex("\\{[a-zA-Z][a-zA-Z0-9]*\\:((\\\".*\\\")|(true)|(false)|([0-9]*(\\.)?[0-9]*))(,[a-zA-Z][a-zA-Z0-9]*\\:((\\\".*\\\")|(true)|(false)|([0-9]*(\\.)?[0-9]*)))*?\\}"),
-        regex("\\\"[a-zA-Z][a-zA-Z0-9]*\\\"\\,\\{[a-zA-Z][a-zA-Z0-9]*\\:((\\\".*\\\")|(true)|(false)|([0-9]*(\\.)?[0-9]*))(\\,[a-zA-Z][a-zA-Z0-9]*\\:((\\\".*\\\")|(true)|(false)|([0-9]*(\\.)?[0-9]*)))*?\\}"),
-        regex("\\\"[a-zA-Z][a-zA-Z0-9]*\\\"\\,\\{[a-zA-Z][a-zA-Z0-9]*\\:((int)|(short)|(float)|(text)|(tinyText)|(bool))(\\,[a-zA-Z][a-zA-Z0-9]*\\:((int)|(short)|(float)|(text)|(tinyText)|(bool)))*?\\}"),
-        regex("\\{[a-zA-Z][a-zA-Z0-9]*\\:((\\\".*\\\")|(true)|(false)|([0-9]*(\\.)?[0-9]*))(\\,[a-zA-Z][a-zA-Z0-9]*\\:((\\\".*\\\")|(true)|(false)|([0-9]*(\\.)?[0-9]*)))*?\\},\\{[a-zA-Z][a-zA-Z0-9]*\\:((\\\".*\\\")|(true)|(false)|([0-9]*(\\.)?[0-9]*))(\\,[a-zA-Z][a-zA-Z0-9]*\\:((\\\".*\\\")|(true)|(false)|([0-9]*(\\.)?[0-9]*)))*?\\}")
+        regex("\\\".*\\\""),
+        regex("\\{.*\\:.*(,.*\\:.*)*?\\}"),
+        regex("\\{.*\\:.*(\\,.*\\:.*)*?\\},\\{.*\\:.*(\\,.*\\:.*)*?\\}"),
+        regex("\\\".*\\\"\\,\\{.*\\:.*(\\,.*\\:.*)*?\\}"),
+        regex("\\{.*\\:.*(\\,.*\\:.*)*?\\},\\{.*\\:.*(\\,.*\\:.*)*?\\}")
     };
     vector<string> split(string str,char symb){
         vector<string> result;

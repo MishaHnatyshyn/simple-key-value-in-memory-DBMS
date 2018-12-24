@@ -4,8 +4,6 @@
 
 #include "DBMS.h"
 
-
-
 void DBMS::execute(Command command){
     int commandType = command.getCommandType();
     string commandText = command.getCommand();
