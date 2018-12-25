@@ -71,11 +71,11 @@ bool Parser::checkDataType(string str) {
 }
 
 bool Parser::checkTableFieldName(string str) {
-    return regex_match(str, regex("[a-zA-Z][a-zA-Z0-9]*"));
+    return regex_match(str, regex("[a-zA-Z][a-zA-Z0-9_]*"));
 }
 
 bool Parser::checkFieldType(string str){
-    return regex_match(str, regex(R"((int)|(short)|(float)|(text)|(tinyText)|(bool))"));
+    return regex_match(str, regex(R"((int)|(short)|(float)|(text)|(tinytext)|(bool))"));
 }
 
 void Parser::parseRawArgs(int typeOfArgs, Command * command){
