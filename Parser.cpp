@@ -212,7 +212,7 @@ Command Parser::parse(string input) {
     } else {
         int i = 1, type = 0;
         if(!regex_match(string(1, input[0]), regex("[a-zA-Z]"))) {
-            throw ParserError(input, 0);
+            throw wrongSymbolError(input, 0);
         }
         while(i < input.length()){
             if(input[i] == '.' && type == 0){
@@ -224,15 +224,15 @@ Command Parser::parse(string input) {
                 }
                 while(i < input.length()){
                     if (input[i] == ')' && i != input.length() - 1){
-                        throw ParserError(input, ++i);
+                        throw wrongSymbolError(input, ++i);
                     }
                     i++;
                 }
             } else if (!regex_match(string(1, input[i]), regex("[a-zA-Z0-9]"))) {
-                if(i == 0) throw ParserError(input, i);
+                if(i == 0) throw wrongSymbolError(input, i);
             }
             i++;
         }
-        throw ParserError(input, --i);
+        throw wrongSymbolError(input, --i);
     }
 }
