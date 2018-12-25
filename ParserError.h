@@ -71,7 +71,6 @@ private:
             "(\"string\")",
             "(object)",
             "(\"string\", object)",
-            "(\"string\", object)",
             "(object, object)"
     };
 public:

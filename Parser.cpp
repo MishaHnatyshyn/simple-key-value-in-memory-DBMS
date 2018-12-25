@@ -16,8 +16,8 @@ vector<string> Parser::split(string str,char symb){
 
 vector<Data> Parser::parseData(string data) {
     vector<Data> result;
-    for(string i : Parser::split(data, ',')){
-        vector <string > temp = Parser::split(i, ':');
+    for(string i : split(data, ',')){
+        vector <string > temp = split(i, ':');
         result.push_back(Data(temp[0], temp[1]));
     }
     return result;
@@ -43,6 +43,127 @@ string Parser::deleteSpacesFromString(string str) {
     return str;
 }
 
+void Parser::checkCommand(Command *item) {
+    for (CommandStruct i : commands){
+        if(i.name == item->getCommand()) {
+            if(i.commandType != item->getCommandType()) throw NoSuchCommand();
+            if(!i.shouldHaveArgs && getRawArgs().length()) throw MustNotHaveArgs();
+            if (i.shouldHaveArgs) parseRawArgs(i.argsTypeNumber, item);
+            if (i.shouldHaveTableName && item->getTableName() == ""){
+                throw NoTableName();
+            }
+            return;
+        }
+    }
+    throw NoSuchCommand();
+}
+
+void Parser::setRawArgs(string args) {
+    rawArgs = args;
+}
+
+string Parser::getRawArgs() {
+    return rawArgs;
+}
+
+bool Parser::checkDataType(string str) {
+    return regex_match(str, regex(R"(((\".*\")|(true)|(false)|([0-9]*(\.)?[0-9]*)))"));
+}
+
+bool Parser::checkTableFieldName(string str) {
+    return regex_match(str, regex("[a-zA-Z][a-zA-Z0-9]*"));
+}
+
+bool Parser::checkFieldType(string str){
+    return regex_match(str, regex(R"((int)|(short)|(float)|(text)|(tinyText)|(bool))"));
+}
+
+void Parser::parseRawArgs(int typeOfArgs, Command * command){
+    if (rawArgs == ""){
+        throw NoArguments();
+    }
+    if(regex_match(rawArgs, argTypes[typeOfArgs])){
+        if((typeOfArgs) == 0){
+            string temp = rawArgs.substr(1, rawArgs.length() - 2);
+            if(!checkTableFieldName(temp)){
+                throw StringError();
+            }
+            command->setTableName(temp);
+        }
+        else if (typeOfArgs == 1) {
+            vector < Data > temp = parseData(rawArgs.substr(1, rawArgs.length() - 2));
+            for(Data item : temp) {
+                if(!checkTableFieldName(item.fieldName)){
+                    throw StringError();
+                }
+                if(!checkDataType(item.data)){
+                    throw typeError(item.data);
+                }
+            }
+            command->setDataToInsert(temp);
+        } else if (typeOfArgs == 2) {
+            string name, object;
+            for (int i = 0; i < rawArgs.length(); ++i) {
+                if(rawArgs[i] == ','){
+                    name = rawArgs.substr(1, i-2);
+                    object = rawArgs.substr(i+1, rawArgs.length() - 1);
+                    break;
+                }
+            }
+            if(!checkTableFieldName(name)){
+                throw StringError();
+            }
+            vector < Data > temp = parseData(object.substr(1, object.length() - 2));
+            for(Data item : temp) {
+                if(!checkTableFieldName(item.fieldName)){
+                    throw StringError();
+                }
+                if(!checkFieldType(item.data)){
+                    throw dataTypeError(item.data);
+                }
+            }
+            command->setTableName(name);
+            command->setDataToInsert(temp);
+        }
+        else if (typeOfArgs == 3) {
+            string object1, object2;
+            for (int i = 0; i < rawArgs.length(); ++i) {
+                if(rawArgs[i] == '}'){
+                    i++;
+                    object1 = rawArgs.substr(1, i-2);
+                    object2 = rawArgs.substr(i+2, rawArgs.length() - (i + 3));
+                    break;
+                }
+            }
+            vector < Data > temp1 = parseData(object1);
+            vector < Data > temp2 = parseData(object2);
+
+            for(Data item : temp1) {
+                if(!checkTableFieldName(item.fieldName)){
+                    throw StringError();
+                }
+                if(!checkDataType(item.data)){
+                    throw dataTypeError(item.data);
+                }
+            }
+
+
+            for(Data item : temp2) {
+                if(!checkTableFieldName(item.fieldName)){
+                    throw StringError();
+                }
+                if(!checkDataType(item.data)){
+                    throw dataTypeError(item.data);
+                }
+            }
+            command->setDataToFind(temp1);
+            command->setDataToInsert(temp2);
+        }
+    } else {
+        throw WrongArgument(typeOfArgs);
+    }
+}
+
 Command Parser::parse(string input) {
     input = deleteSpacesFromString(input);
     Command result;
@@ -65,11 +186,10 @@ Command Parser::parse(string input) {
             } else if (input[i] == ')') {
                 length = i - start;
                 string temp = input.substr(start, length);
-                result.setRawArgs(temp);
+                setRawArgs(temp);
             }
         }
-        CommandChecker checker;
-        checker.checkCommand(&result);
+        checkCommand(&result);
         return result;
     }
     else if (regex_match(input, firstTypeCommand)) {
@@ -84,11 +204,10 @@ Command Parser::parse(string input) {
             else if (input[i] == ')') {
                 length = i - start;
                 string temp = input.substr(start, length);
-                result.setRawArgs(temp);
+                setRawArgs(temp);
             }
         }
-        CommandChecker checker;
-        checker.checkCommand(&result);
+        checkCommand(&result);
         return result;
     } else {
         int i = 1, type = 0;
@@ -114,6 +233,6 @@ Command Parser::parse(string input) {
             }
             i++;
         }
-        throw ParserError(input, i);
+        throw ParserError(input, --i);
     }
 }
