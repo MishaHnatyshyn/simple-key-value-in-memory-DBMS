@@ -10,10 +10,10 @@ void DBMS::execute(Command command){
     if (commandType == 1){
         if (commandText == "createTable"){
             createTable(command.getTableName(), command.getDataToInsert());
-            cout<<"TABLE CREATED" <<endl;
+            cout<<"TABLE WAS CREATED" <<endl;
         } else if (commandText == "dropTable"){
             dropTable(command.getTableName());
-            cout<<"TABLE DROPPED" <<endl;
+            cout<<"TABLE WAS DROPPED" <<endl;
         }
         else  if (commandText == "display"){
             displayTable(command.getTableName());
@@ -23,6 +23,7 @@ void DBMS::execute(Command command){
     } else if (commandType == 2){
         if (commandText == "insert"){
             insert(command.getTableName(), command.getDataToInsert());
+            cout<<"ROW WAS INSERTED" <<endl;
         } else if (commandText == "display"){
             displayTable(command.getTableName());
         } else if (commandText == "getOneRow"){
@@ -31,12 +32,16 @@ void DBMS::execute(Command command){
             findMany(command.getTableName(), command.getDataToInsert());
         } else if (commandText == "deleteRow"){
             deleteOne(command.getTableName(), command.getDataToInsert());
+            cout<<"ROW WAS DELETED" <<endl;
         } else if (commandText == "deleteRows"){
             deleteMany(command.getTableName(), command.getDataToInsert());
+            cout<<"ROWS WERE DELETED" <<endl;
         } else if (commandText == "changeOneRowData"){
             updateOne(command.getTableName(), command.getDataToFind(), command.getDataToInsert());
+            cout<<"ROW WAS UPDATED" <<endl;
         } else if (commandText == "changeData"){
             updateMany(command.getTableName(), command.getDataToFind(), command.getDataToInsert());
+            cout<<"ROWS WERE UPDATED" <<endl;
         } else throw WrongCommand(commandText);
     } else if (commandType == 0){
         if (commandText == "display"){

@@ -14,6 +14,10 @@ void Shell::start() {
         if(input == "exit"){
             break;
         }
+        if(input == "help"){
+            this->displayHelp();
+            continue;
+        }
         try {
             Command c = a.parse(input);
 
@@ -35,7 +39,7 @@ void Shell::start() {
                 cout << "field:\t" << i.fieldName << " data:\t"<< i.data << endl;
             }*/
 
-          cout << "\n==================== OUTPUT ====================\n" << endl;
+//          cout << "\n==================== OUTPUT ====================\n" << endl;
 
             db.execute(c);
         }
@@ -48,6 +52,19 @@ void Shell::start() {
     }
 }
 
-void Shell::displayResult() {
+void Shell::displayHelp() {
+    cout << "Welcome in the DBMS Shell!" << endl;
+    cout << "The Shell commands:" << endl;
+    cout << "  exit - stops program" << endl;
+    cout << "  help - displays command list" << endl;
+    cout << "  info - displays program info" << endl;
 
+    cout << "The Table commands:" << endl;
+    cout << "  createTable(tableName, {fieldName: type[, fieldName: type]}) - create table" << endl;
+    cout << "    example: > createTable(\"exampleTable\", {name: string, age: int})" << endl;
+
+    cout << "  dropTable(tableName) - deletes table" << endl;
+    cout << "    example: > dropTable(\"exampleTable\")" << endl;
+
+    cout << "Data commands:" << endl;
 };

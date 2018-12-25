@@ -42,7 +42,7 @@ public:
 //        if (!regex_match(data, this->regexInt)) throw IntError(data);
 //        cout << regex_match(data, regex("^[0-9]$")) << endl;
 //        if (!regex_match(data, regex("^[0-9]$"))) throw IntError(data);
-        if (data == "true" || data == "false") throw IntError(data);
+        if (data == "true" || data == "false" || data[0] == '"') throw IntError(data);
     }
 
     virtual bool compare(string val){
@@ -90,7 +90,7 @@ public:
 
     virtual void validate(string data){
 //        if (!regex_match(data, regexFloat)) throw FloatError(data);
-        if (data == "true" || data == "false") throw FloatError(data);
+        if (data == "true" || data == "false" || data[0] == '"') throw FloatError(data);
     }
 
     float get(){
@@ -134,7 +134,7 @@ public:
 
     virtual void validate(string data){
 //        if (!regex_match(data, regexInt)) throw ShortError(data, true);
-        if (data == "true" || data == "false")  throw ShortError(data, true);
+        if (data == "true" || data == "false" || data[0] == '"')  throw ShortError(data, true);
         if (abs(atoi(data.c_str())) > 327677) throw ShortError(data, false);
     }
 
@@ -189,7 +189,7 @@ public:
         return data == newData;
     }
     virtual void set(string val){
-        data = val;
+        data = val.substr(1, val.length()-2);
     }
     string get(){
         return data;
@@ -225,8 +225,9 @@ public:
         if (data.length() > 256) throw TinyTextError(data);
     }
     virtual void set(string val){
+        validate(val);
         data = new char[val.length()];
-        data = strdup(val.c_str());
+        data = strdup(val.substr(1, val.length()-2).c_str());
     }
 };
 
@@ -253,6 +254,8 @@ public:
         if (data != "true" || data != "false") throw BoolError(data);
     }
     virtual void set(string val){
-        this->data = (val == "true");
+        string newVal = val.substr(1, val.length()-2);
+        validate(newVal);
+        this->data = (newVal == "true");
     }
 };

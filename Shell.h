@@ -4,5 +4,5 @@
 class Shell {
 public:
     void start();
-    void displayResult();
+    void displayHelp();
 };
