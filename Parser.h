@@ -46,7 +46,7 @@ private:
             CommandStruct("deleteRows", 2, true, true, 1),
             CommandStruct("changeOneRowData", 2, true, true, 3),
             CommandStruct("changeData", 2, true, true, 3),
-            CommandStruct("tables", 2, false, false),
+            CommandStruct("tables", 1, false, false),
             CommandStruct("display", 2, false, false),
     };
     vector < regex > argTypes {
