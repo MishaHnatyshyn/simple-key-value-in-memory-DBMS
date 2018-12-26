@@ -75,7 +75,7 @@ bool Parser::checkTableFieldName(string str) {
 }
 
 bool Parser::checkFieldType(string str){
-    return regex_match(str, regex(R"((int)|(short)|(float)|(text)|(tinytext)|(bool))"));
+    return regex_match(str, regex(R"((int)|(short)|(float)|(text)|(bool))"));
 }
 
 void Parser::parseRawArgs(int typeOfArgs, Command * command){

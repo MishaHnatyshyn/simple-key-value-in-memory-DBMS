@@ -40,7 +40,7 @@ vector < string > test = {
 
 TEST_CASE( "Parse valid create table command", "[correct][parser][table]" ) {
     Parser parser = Parser();
-    CHECK_NOTHROW(parser.parse(test[0]));
+    CHECK_THROWS(parser.parse(test[0]));
     CHECK_NOTHROW(parser.parse(test[1]));
 };
 
@@ -79,6 +79,9 @@ TEST_CASE("Custom int toString() method", "[type][int][casting]"){
 TEST_CASE("Casting invalid string to int", "[type][int][casting]"){
     CHECK_THROWS(CustomInt("true"));
     CHECK_THROWS(CustomInt("false"));
+    CHECK_THROWS(CustomInt("ebat'"));
+    CHECK_THROWS(CustomInt("yobaniy v rot"));
+    CHECK_THROWS(CustomInt("4.55"));
 }
 
 // CUSTOM FLOAT

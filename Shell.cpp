@@ -21,7 +21,7 @@ void Shell::start() {
         try {
             Command c = a.parse(input);
 
-            /*cout << "\n==================== INPUT ====================\n" << endl;
+            cout << "\n==================== INPUT ====================\n" << endl;
             cout << input << endl;
 
             cout << "\n==================== PARSED DATA ====================\n" << endl;
@@ -37,9 +37,9 @@ void Shell::start() {
             cout << "Data to Insert: " << endl;
             for(Data i : tempInsertData){
                 cout << "field:\t" << i.fieldName << " data:\t"<< i.data << endl;
-            }*/
+            }
 
-//          cout << "\n==================== OUTPUT ====================\n" << endl;
+            cout << "\n==================== OUTPUT ====================\n" << endl;
 
             db.execute(c);
         }
@@ -97,7 +97,7 @@ void Shell::displayHelp() {
     cout << "    example: > example.display()" << endl;
 
     cout << "" << endl;
-    cout << "For more info you can visit: https://github.com/MishaHnatyshyn/simple-key-value-in-memory-DBMS/tree/core" << endl;
+    cout << "For more info you can visit: https://github.com/MishaHnatyshyn/simple-key-value-in-memory-DBMS" << endl;
 };
 
 void Shell::displayInfo(){

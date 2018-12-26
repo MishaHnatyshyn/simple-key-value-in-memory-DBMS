@@ -239,6 +239,7 @@ public:
     CustomBool(): data(false){};
 
     CustomBool(string data){
+        cout << data << "kek" << endl;
         validate(data);
         this->data = data == "true";
     }
@@ -251,10 +252,10 @@ public:
         return data == castedVal;
     }
     virtual void validate(string data){
-        if (data != "true" || data != "false") throw BoolError(data);
+        if (data != "true" && data != "false") throw BoolError(data);
     }
     virtual void set(string val){
-        string newVal = val.substr(1, val.length()-2);
+        string newVal = val;
         validate(newVal);
         this->data = (newVal == "true");
     }
